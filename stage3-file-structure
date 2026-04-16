@@ -1,0 +1,33 @@
+terraform/
+│
+├── bootstrap/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   ├── versions.tf
+│   └── terraform.tfvars.example
+│
+├── environments/
+│   └── dev/
+│       ├── backend.hcl.example
+│       ├── main.tf
+│       ├── variables.tf
+│       ├── outputs.tf
+│       ├── versions.tf
+│       └── terraform.tfvars.example
+│
+└── modules/
+    ├── eks/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    ├── network/
+    │   ├── main.tf
+    │   ├── variables.tf
+    │   └── outputs.tf
+    │
+    └── ecr/
+        ├── main.tf
+        ├── variables.tf
+        └── outputs.tf

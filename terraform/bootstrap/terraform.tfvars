@@ -1,0 +1,5 @@
+project_name      = "end-to-end-devops"
+environment       = "dev"
+aws_region        = "ap-south-1"
+state_bucket_name = "harsh-end-to-end-devops-tf-state"
+lock_table_name   = "end-to-end-devops-tf-locks"

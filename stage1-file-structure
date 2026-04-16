@@ -1,0 +1,37 @@
+services/
+│
+├── frontend/
+│
+├── api-gateway/
+│   ├── src/
+│   │   ├── middleware/
+│   │   ├── routes/
+│   │   ├── config/
+│   │   └── index.js
+│   └── package.json
+│
+├── auth-service/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── index.js
+│   └── package.json
+│
+├── orders-service/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── routes/
+│   │   ├── queue/
+│   │   └── index.js
+│   └── package.json
+│
+├── shared-lib/
+│   ├── logger.js
+│   └── config.js
+│
+├── messaging/
+│   └── rabbitmq.js
+│
+└── cache/
+    └── redis.js
