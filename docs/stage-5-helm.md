@@ -1,12 +1,13 @@
 # Stage 5: Helm Packaging
 
-Stage 5 converts the plain Kubernetes manifests from Stage 4 into a reusable Helm chart. This stage is documentation-only for now and describes the target workflow, structure, and checklist.
+Stage 5 converts the plain Kubernetes manifests from Stage 4 into a reusable Helm chart. The repo now includes a starter Helm scaffold plus dedicated Stage 5 command-sequence and file-structure docs.
 
 ## Goal
 
 - Package Kubernetes manifests as a Helm chart.
 - Move repeated values into `values.yaml`.
 - Make image repository, image tag, namespace, replicas, ports, hosts, and secrets configurable.
+- Keep the frontend as a `ClusterIP` service and expose it through an ingress controller backed by an AWS load balancer.
 - Keep the deployment easy to install, upgrade, rollback, and uninstall.
 - Prepare the project for CI/CD deployment in a later stage.
 
@@ -81,18 +82,22 @@ services:
     repository: end-to-end-devops-dev-frontend
     port: 3000
     replicas: 1
+    serviceType: ClusterIP
   apiGateway:
     repository: end-to-end-devops-dev-api-gateway
     port: 5000
     replicas: 1
+    serviceType: ClusterIP
   authService:
     repository: end-to-end-devops-dev-auth-service
     port: 4000
     replicas: 1
+    serviceType: ClusterIP
   ordersService:
     repository: end-to-end-devops-dev-orders-service
     port: 7000
     replicas: 1
+    serviceType: ClusterIP
   orderConsumer:
     replicas: 1
 
@@ -107,8 +112,8 @@ rabbitmq:
 
 ingress:
   enabled: true
-  frontendHost: frontend.local
-  apiHost: api.local
+  frontendHost: ""
+  apiHost: ""
 
 secrets:
   jwtSecret: replace-me
@@ -121,6 +126,29 @@ secrets:
 - App images are already pushed to ECR.
 - `helm` is installed.
 - `kubectl` is connected to the EKS cluster.
+- An ingress controller is installed if you want AWS load balancer routing.
+
+Add the ingress-nginx Helm repository, create a separate namespace for the controller, and install it there:
+
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+kubectl create namespace ingress-nginx
+helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx \
+  --set controller.service.type=LoadBalancer
+```
+
+If Helm reports an ownership conflict for `ClusterRole`, `ClusterRoleBinding`, or `IngressClass`, clean up the old ingress-nginx resources first:
+
+```bash
+kubectl get clusterrole | grep ingress-nginx
+kubectl get clusterrolebinding | grep ingress-nginx
+kubectl get ingressclass
+kubectl delete clusterrole ingress-nginx
+kubectl delete clusterrolebinding ingress-nginx
+kubectl delete ingressclass nginx
+```
 
 Check tools:
 
@@ -150,7 +178,7 @@ Examples:
 - hardcoded image tag becomes `{{ .Values.image.tag }}`
 - hardcoded image registry becomes `{{ .Values.image.registry }}`
 - hardcoded replica count becomes a value under `services`
-- hardcoded ingress hosts become values under `ingress`
+- frontend service type stays `ClusterIP`
 
 ## 3. Validate Templates Locally
 
@@ -175,12 +203,20 @@ helm template end-to-end-devops ./helm/end-to-end-devops \
 
 ## 4. Install to Kubernetes
 
-Install the chart:
+Install the chart and set the JWT secret in one step:
 
 ```bash
-helm install end-to-end-devops ./helm/end-to-end-devops \
+helm upgrade --install end-to-end-devops ./helm/end-to-end-devops \
   --namespace end-to-end-devops \
-  --create-namespace
+  --create-namespace \
+  --set secrets.jwtSecret='your-real-secret'
+```
+
+If you removed the ingress controller earlier and Helm fails with a webhook error such as `validate.nginx.ingress.kubernetes.io`, delete the stale ingress-nginx validating webhook first:
+
+```bash
+kubectl get validatingwebhookconfiguration | grep ingress
+kubectl delete validatingwebhookconfiguration ingress-nginx-admission
 ```
 
 Verify:
@@ -188,6 +224,41 @@ Verify:
 ```bash
 helm list -n end-to-end-devops
 kubectl get all -n end-to-end-devops
+```
+
+Find the ingress controller address:
+
+```bash
+kubectl get svc -n ingress-nginx
+```
+
+Wait for the ingress controller `EXTERNAL-IP` field to populate, then open that address in your browser. The frontend service remains `ClusterIP`; traffic flows through the ingress controller and then to the frontend.
+
+If the ingress controller is not installed yet, install one with a `LoadBalancer` Service before deploying the chart.
+
+## 8. Uninstall Ingress Controller
+
+When you are done with Stage 5, remove the ingress controller release first:
+
+```bash
+helm uninstall ingress-nginx -n ingress-nginx
+```
+
+Then delete the namespace:
+
+```bash
+kubectl delete namespace ingress-nginx
+```
+
+If Helm refuses to install the controller again later because of leftover cluster-scoped resources, remove the stale objects first:
+
+```bash
+kubectl get clusterrole | grep ingress-nginx
+kubectl get clusterrolebinding | grep ingress-nginx
+kubectl get ingressclass
+kubectl delete clusterrole ingress-nginx
+kubectl delete clusterrolebinding ingress-nginx
+kubectl delete ingressclass nginx
 ```
 
 ## 5. Upgrade
@@ -238,6 +309,7 @@ kubectl delete namespace end-to-end-devops
 ## Secret Handling
 
 Do not commit real secret values in `values.yaml`.
+The default `secrets.jwtSecret: replace-me` value is only a placeholder.
 
 Safer options:
 
@@ -258,10 +330,24 @@ helm upgrade --install end-to-end-devops ./helm/end-to-end-devops \
 
 - Helm chart exists under `helm/end-to-end-devops`.
 - Stage 4 manifests are converted into Helm templates.
+- Stage 5 command sequence is documented.
+- Stage 5 file structure is documented.
 - `values.yaml` controls image tags, ports, replicas, namespace, hosts, and secret placeholders.
+- `values.yaml` keeps the frontend as `ClusterIP` and routes traffic through ingress.
 - `helm lint` passes.
 - `helm template` renders valid Kubernetes YAML.
-- `helm install` deploys the app successfully.
+- `helm upgrade --install` deploys the app successfully.
 - `helm upgrade` updates image tags successfully.
 - `helm rollback` works.
 - `helm uninstall` removes the release cleanly.
+
+## Screenshots
+
+The Stage 5 screenshots are stored in [screenshots/stage5-ss](../screenshots/stage5-ss/).
+
+![Helm chart created](../screenshots/stage5-ss/helm%20chart%20created.png)
+![Helm list](../screenshots/stage5-ss/helm%20list.png)
+![Frontend app](../screenshots/stage5-ss/frontend-app.png)
+![Helm history](../screenshots/stage5-ss/helm%20history.png)
+![Rollback to version 7](../screenshots/stage5-ss/rollback%20to%207%20version.png)
+![Helm chart uninstalled](../screenshots/stage5-ss/helm%20chart%20uninstalled.png)

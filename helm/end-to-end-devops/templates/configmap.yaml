@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: {{ .Values.namespace.name }}
+data:
+  NODE_ENV: {{ .Values.config.nodeEnv | quote }}
+  FRONTEND_PORT: {{ .Values.config.frontendPort | quote }}
+  API_GATEWAY_PORT: {{ .Values.config.apiGatewayPort | quote }}
+  AUTH_SERVICE_PORT: {{ .Values.config.authServicePort | quote }}
+  ORDERS_SERVICE_PORT: {{ .Values.config.ordersServicePort | quote }}
+  ORDER_SERVICE_URL: {{ .Values.config.orderServiceUrl | quote }}
+  GATEWAY_SERVICE_URL: {{ .Values.config.gatewayServiceUrl | quote }}
+  AUTH_SERVICE_URL: {{ .Values.config.authServiceUrl | quote }}
+  ORDERS_SERVICE_URL: {{ .Values.config.ordersServiceUrl | quote }}
+  REDIS_URL: {{ .Values.config.redisUrl | quote }}
+  RABBITMQ_URL: {{ .Values.config.rabbitmqUrl | quote }}

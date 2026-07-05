@@ -6,6 +6,7 @@ This repository walks through a full app delivery pipeline in four stages:
 2. Docker Compose
 3. AWS infrastructure with Terraform
 4. Kubernetes on EKS
+5. Helm packaging
 
 The stage-by-stage command sequences live in:
 
@@ -13,6 +14,7 @@ The stage-by-stage command sequences live in:
 - [Stage 2](command-sequence/stage2-command-sequence.md)
 - [Stage 3](command-sequence/stage3-command-sequence.md)
 - [Stage 4](command-sequence/stage4-command-sequence.md)
+- [Stage 5](command-sequence/stage5-command-sequence.md)
 
 ## Project Layout
 
@@ -107,6 +109,20 @@ Important prerequisites:
 Follow the Stage 4 command sequence for the exact apply and teardown flow:
 
 - [Stage 4 command sequence](command-sequence/stage4-command-sequence.md)
+
+### Stage 5: Helm Packaging
+
+Stage 5 turns the Stage 4 Kubernetes manifests into a reusable Helm chart.
+
+Included scaffold:
+
+- `helm/end-to-end-devops/`
+- `helm/end-to-end-devops/templates/`
+
+Follow the Stage 5 command sequence and structure docs:
+
+- [Stage 5 command sequence](command-sequence/stage5-command-sequence.md)
+- [Stage 5 file structure](file-structure/stage5-file-structure.md)
 
 ## Quick Start
 

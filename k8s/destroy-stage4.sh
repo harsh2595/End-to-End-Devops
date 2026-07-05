@@ -24,6 +24,14 @@ delete_file() {
 
 require_cmd kubectl
 
+if [ "${KEEP_INGRESS_CONTROLLER:-false}" != "true" ]; then
+  print_step "Deleting ingress controller namespace"
+  kubectl delete namespace ingress-nginx --ignore-not-found=true
+  kubectl wait --for=delete namespace/ingress-nginx --timeout=120s || true
+else
+  print_step "Keeping ingress controller namespace"
+fi
+
 print_step "Deleting frontend and ingress"
 delete_file "${BASE_DIR}/ingress.yaml"
 delete_file "${BASE_DIR}/frontend-service.yaml"
@@ -51,12 +59,6 @@ delete_file "${BASE_DIR}/configmap.yaml"
 print_step "Deleting namespace"
 kubectl delete namespace "${NAMESPACE}" --ignore-not-found=true
 kubectl wait --for=delete namespace/"${NAMESPACE}" --timeout=120s || true
-
-if [ "${KEEP_INGRESS_CONTROLLER:-false}" != "true" ]; then
-  print_step "Deleting ingress controller namespace"
-  kubectl delete namespace ingress-nginx --ignore-not-found=true
-  kubectl wait --for=delete namespace/ingress-nginx --timeout=120s || true
-fi
 
 print_step "Stage 4 teardown complete"
 echo "Namespace: ${NAMESPACE}"

@@ -81,6 +81,8 @@ When you are done with the Kubernetes stage, tear down the app resources in reve
 ./k8s/destroy-stage4.sh
 ```
 
+The destroy script deletes the ingress controller namespace first, then removes the app manifests and the application namespace.
+
 After that, confirm that no Kubernetes load balancer services remain:
 
 ```bash
@@ -90,7 +92,14 @@ kubectl get ns ingress-nginx || true
 
 Wait until the `ingress-nginx` namespace is gone and there are no remaining `LoadBalancer` services before running Terraform destroy. That gives AWS time to release the ENIs, security groups, and public addresses attached to the controller.
 
-By default, the teardown also removes the `ingress-nginx` namespace so the controller load balancer does not keep the VPC alive. To keep it, set:
+If you later reinstall Helm and see a webhook error like `validate.nginx.ingress.kubernetes.io`, the cluster may still have a stale ingress-nginx validating webhook. Remove it before retrying the install:
+
+```bash
+kubectl get validatingwebhookconfiguration | grep ingress
+kubectl delete validatingwebhookconfiguration ingress-nginx-admission
+```
+
+To keep the ingress controller during teardown, set:
 
 ```bash
 KEEP_INGRESS_CONTROLLER=true ./k8s/destroy-stage4.sh
@@ -108,5 +117,6 @@ kubectl get pods -A | grep -Ei 'ingress|nginx|alb'
 ./k8s/apply-stage4.sh
 ./k8s/verify-stage4.sh
 ./k8s/destroy-stage4.sh
+kubectl get ns ingress-nginx || true
 kubectl get svc -A | grep LoadBalancer || true
 ```

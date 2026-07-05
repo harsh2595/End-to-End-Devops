@@ -143,6 +143,8 @@ If you want to keep the ingress controller namespace for some reason, set:
 KEEP_INGRESS_CONTROLLER=true ./k8s/destroy-stage4.sh
 ```
 
+The Stage 4 teardown removes the `ingress-nginx` namespace first, then deletes the application manifests and the application namespace.
+
 Wait until the `ingress-nginx` namespace is gone and there are no remaining `LoadBalancer` services before running Terraform destroy. That gives AWS time to release the ENIs, security groups, and public addresses attached to the controller.
 
 The Stage 3 Terraform destroy should remove:

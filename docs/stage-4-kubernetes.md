@@ -162,6 +162,16 @@ aws eks update-kubeconfig --region ap-south-1 --name end-to-end-devops-dev-eks
 ./k8s/build-and-push-images.sh
 ./k8s/apply-stage4.sh
 ./k8s/verify-stage4.sh
+./k8s/destroy-stage4.sh
+```
+
+The destroy script removes the `ingress-nginx` namespace first, then deletes the application manifests and the application namespace.
+
+If a later Helm install fails with `validate.nginx.ingress.kubernetes.io`, delete the stale ingress-nginx validating webhook before retrying:
+
+```bash
+kubectl get validatingwebhookconfiguration | grep ingress
+kubectl delete validatingwebhookconfiguration ingress-nginx-admission
 ```
 
 ## Completion Checklist

@@ -1,0 +1,61 @@
+namespace:
+  name: end-to-end-devops
+
+config:
+  nodeEnv: production
+  frontendPort: "3000"
+  apiGatewayPort: "5000"
+  authServicePort: "4000"
+  ordersServicePort: "7000"
+  orderServiceUrl: http://orders-service:7000
+  gatewayServiceUrl: http://api-gateway:5000
+  authServiceUrl: http://auth-service:4000
+  ordersServiceUrl: http://orders-service:7000
+  redisUrl: redis://redis:6379
+  rabbitmqUrl: amqp://rabbitmq
+
+image:
+  registry: 198452822403.dkr.ecr.ap-south-1.amazonaws.com
+  tag: latest
+  pullPolicy: IfNotPresent
+
+services:
+  frontend:
+    repository: end-to-end-devops-dev-frontend
+    port: 3000
+    replicas: 1
+    serviceType: ClusterIP
+  apiGateway:
+    repository: end-to-end-devops-dev-api-gateway
+    port: 5000
+    replicas: 1
+    serviceType: ClusterIP
+  authService:
+    repository: end-to-end-devops-dev-auth-service
+    port: 4000
+    replicas: 1
+    serviceType: ClusterIP
+  ordersService:
+    repository: end-to-end-devops-dev-orders-service
+    port: 7000
+    replicas: 1
+    serviceType: ClusterIP
+  orderConsumer:
+    replicas: 1
+
+redis:
+  image: redis:7-alpine
+  port: 6379
+
+rabbitmq:
+  image: rabbitmq:3-management-alpine
+  amqpPort: 5672
+  managementPort: 15672
+
+ingress:
+  enabled: true
+  frontendHost: ""
+  apiHost: ""
+
+secrets:
+  jwtSecret: replace-me

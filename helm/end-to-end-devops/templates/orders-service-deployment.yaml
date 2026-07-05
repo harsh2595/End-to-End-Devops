@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-service
+  namespace: {{ .Values.namespace.name }}
+spec:
+  replicas: {{ .Values.services.ordersService.replicas }}
+  selector:
+    matchLabels:
+      app: orders-service
+  template:
+    metadata:
+      labels:
+        app: orders-service
+    spec:
+      containers:
+        - name: orders-service
+          image: "{{ .Values.image.registry }}/{{ .Values.services.ordersService.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.services.ordersService.port }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: ORDERS_SERVICE_PORT
+            - name: RABBITMQ_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: RABBITMQ_URL
