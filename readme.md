@@ -1,125 +1,125 @@
 # End-to-End DevOps Project
 
-## Docker setup
+This repository walks through a full app delivery pipeline in four stages:
 
-This repo can now be started as a multi-container stack with Docker Compose.
+1. local development with Node.js
+2. Docker Compose
+3. AWS infrastructure with Terraform
+4. Kubernetes on EKS
 
-### Services
+The stage-by-stage command sequences live in:
 
-- `frontend` on `http://localhost:3000`
-- `api-gateway` on `http://localhost:5000`
-- `auth-service` on `http://localhost:4000`
-- `orders-service` on `http://localhost:7000`
-- `rabbitmq` on `amqp://localhost:5672` and management UI on `http://localhost:15672`
-- `redis` on `redis://localhost:6379`
+- [Stage 1](stage1-command-sequence.md)
+- [Stage 2](stage2-command-sequence.md)
+- [Stage 3](stage3-command-sequence.md)
+- [Stage 4](stage4-command-sequence.md)
 
-### Run
+## Project Layout
+
+- `services/` contains the application services
+- `terraform/` contains the AWS bootstrap and dev infrastructure
+- `k8s/` contains the Kubernetes manifests and helper scripts
+- `smoke-test.sh` validates the app flow across the services
+
+## Stage Overview
+
+### Stage 1: Local Node.js
+
+Run the backend services locally and use Docker only for Redis and RabbitMQ.
+
+Main checks:
+
+- frontend on `http://localhost:3000`
+- API gateway on `http://localhost:5000`
+- auth service on `http://localhost:4000`
+- orders service on `http://localhost:7000`
+
+Use the Stage 1 sequence for the exact start and stop commands:
+
+- [Stage 1 command sequence](stage1-command-sequence.md)
+
+### Stage 2: Docker Compose
+
+Run the full stack as containers with Docker Compose.
+
+Services started:
+
+- `frontend`
+- `api-gateway`
+- `auth-service`
+- `orders-service`
+- `order-consumer`
+- `redis`
+- `rabbitmq`
+
+Start and stop:
 
 ```bash
 docker compose up --build
-```
-
-### Stop
-
-```bash
 docker compose down
 ```
 
-### Smoke test
-
-After the containers are running, verify the stack with:
+Verify the stack with:
 
 ```bash
 ./smoke-test.sh
 ```
 
-The script checks the frontend, gateway, auth service, and orders service, then logs in and submits a test order through the API gateway.
-It also verifies that the same test item appears in the `order-consumer` logs.
-
-You can override the defaults if needed:
+Useful overrides:
 
 ```bash
 TEST_USER=harsh TEST_ITEM=my-order TEST_QUANTITY=2 ./smoke-test.sh
-```
-
-If you only want the HTTP checks and want to skip consumer log verification:
-
-```bash
 VERIFY_QUEUE_LOGS=false ./smoke-test.sh
 ```
 
-### Notes
+### Stage 3: Terraform on AWS
 
-- The frontend calls the API gateway through `NEXT_PUBLIC_API_URL`.
-- The API gateway talks to the orders service through Docker service discovery using `http://orders-service:7000`.
-- The orders service and consumer talk to RabbitMQ through `amqp://rabbitmq`.
+Stage 3 provisions the cloud foundation:
 
-## Stage 3 Terraform
+- Terraform remote state bootstrap
+- dev environment resources
+- VPC and networking
+- ECR repositories
+- EKS cluster and node group
 
-Stage 3 introduces a Terraform foundation for AWS under `terraform/`.
+Follow the Stage 3 command sequence for the bootstrap and dev workflow:
 
-What is included:
+- [Stage 3 command sequence](stage3-command-sequence.md)
 
-- a `bootstrap` environment for Terraform remote state
-- a `dev` environment
-- a reusable `network` module for VPC, public subnets, and internet gateway
-- a reusable `ecr` module for Docker image repositories
+### Stage 4: Kubernetes on EKS
 
-Suggested workflow:
+Stage 4 deploys the app to Kubernetes using the EKS cluster from Stage 3.
 
-```bash
-cd terraform/bootstrap
-cp terraform.tfvars.example terraform.tfvars
-terraform init
-terraform apply
+Included helper scripts:
 
-cd ../environments/dev
-cp terraform.tfvars.example terraform.tfvars
-cp backend.hcl.example backend.hcl
-terraform init -backend-config=backend.hcl
-terraform plan
-```
+- `k8s/build-and-push-images.sh`
+- `k8s/apply-stage4.sh`
+- `k8s/verify-stage4.sh`
+- `k8s/destroy-stage4.sh`
 
-This gives the project a cloud-ready base for later stages like Kubernetes, Helm, and CI/CD.
+Important prerequisites:
 
-### Remote state backend
+- AWS credentials configured
+- `kubectl` connected to the EKS cluster
+- Docker images pushed to ECR
+- an ingress controller installed in the cluster
 
-Terraform is configured to use an S3 backend for remote state.
+Follow the Stage 4 command sequence for the exact apply and teardown flow:
 
-Create the backend resources first from `terraform/bootstrap`.
+- [Stage 4 command sequence](stage4-command-sequence.md)
 
-Update `terraform/environments/dev/backend.hcl` with your real values:
+## Quick Start
 
-- S3 bucket for Terraform state
-- state file key
-- AWS region
-- DynamoDB table for state locking
+If you want the shortest path through the repo:
 
-Example init flow:
+1. Use Stage 1 to validate the services locally.
+2. Use Stage 2 to validate the full containerized stack.
+3. Use Stage 3 to provision AWS infrastructure.
+4. Use Stage 4 to deploy the app to Kubernetes.
 
-```bash
-cd terraform/bootstrap
-cp terraform.tfvars.example terraform.tfvars
-terraform init
-terraform apply
+## Notes
 
-cd ../environments/dev
-cp backend.hcl.example backend.hcl
-cp terraform.tfvars.example terraform.tfvars
-terraform init -backend-config=backend.hcl
-terraform plan
-```
-
-## Stage 4 Kubernetes
-
-Stage 4 prepares Kubernetes manifests under `k8s/`.
-
-What is included:
-
-- namespace
-- config map
-- secret example
-- deployments and services for all app containers
-- ingress placeholder for frontend and API gateway
-
-Files are scaffolded to match the Dockerized services and are ready for Stage 5 Helm conversion.
+- The frontend talks to the API gateway through `NEXT_PUBLIC_API_URL`.
+- The API gateway talks to the orders service through Docker or Kubernetes service discovery, depending on the stage.
+- The orders service and consumer talk to RabbitMQ.
+- Keep the Terraform infrastructure alive until Stage 4 is completely finished, because the Kubernetes deployment depends on the EKS cluster and ECR repositories.

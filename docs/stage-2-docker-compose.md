@@ -128,3 +128,17 @@ If you also want to remove local images, do that separately after confirming the
 - Frontend is available at `http://localhost:3000`.
 - Smoke test passes.
 - Consumer logs contain the submitted order item.
+
+## Screenshots
+
+The Stage 2 screenshot set is stored in [stage2-ss](../stage2-ss/).
+
+![Docker Compose file](../stage2-ss/docker%20compose%20file.png)
+![Frontend Dockerfile](../stage2-ss/dockerfile-frontend.png)
+![Auth Dockerfile](../stage2-ss/dockerfile-auth.png)
+![API gateway Dockerfile](../stage2-ss/dockerfile-apigateway.png)
+![Orders Dockerfile](../stage2-ss/dockerfile-orders.png)
+![All containers up](../stage2-ss/All%20container%20up.png)
+![Frontend console](../stage2-ss/Frontend-console.png)
+![Frontend showing test order](../stage2-ss/Frontend-showing-test-order.png)
+![Order received](../stage2-ss/order-recieved.png)

@@ -174,3 +174,19 @@ aws eks update-kubeconfig --region ap-south-1 --name end-to-end-devops-dev-eks
 - Kubernetes Services resolve internally.
 - Ingress object exists.
 - Verification script completes without critical errors.
+
+## Screenshots
+
+The Stage 4 screenshots are stored in [stage4-ss](../stage4-ss/).
+
+![Kubeconfig updated](../stage4-ss/kube-config-file-updated%20with%20current%20eks%20cluster%20details%20like%20certificate-auth.png)
+![Ingress controller installed](../stage4-ss/ingress-conroller-installed%20before%20all%20manifest%20applied.png)
+![Images built and pushed](../stage4-ss/images%20build%20and%20pushed%20to%20ecr.png)
+![Frontend image](../stage4-ss/frontend-image.png)
+![API gateway image](../stage4-ss/api-gateway-image.png)
+![Auth service image](../stage4-ss/auth-service-image.png)
+![Order service image](../stage4-ss/order-service-image.png)
+![Manifest applied](../stage4-ss/k8s-manifest-applied.png)
+![Worker nodes running](../stage4-ss/2%20worker%20nodes%20running.png)
+![Verification complete](../stage4-ss/verified%20everything%20is%20running.png)
+![Cluster deleted](../stage4-ss/cluster%20deleted%20successfully.png)

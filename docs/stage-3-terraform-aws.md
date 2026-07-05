@@ -183,3 +183,18 @@ terraform destroy -var-file="terraform.tfvars"
 - Four ECR repositories are created.
 - EKS cluster is active.
 - `kubectl get nodes` works after updating kubeconfig.
+
+## Screenshots
+
+The Stage 3 screenshots are stored in [stage3-ss](../stage3-ss/).
+
+![S3 backend state management](../stage3-ss/s3backend-state-management.png)
+![Backend S3 state file](../stage3-ss/Backend-s3-statefile.png)
+![Resources created](../stage3-ss/resources3created.png)
+![VPC subnet planned](../stage3-ss/eksvpcsubnet-planned.png)
+![Creation in progress](../stage3-ss/Creationinprogresseksvpcsubnet.png)
+![EKS launched](../stage3-ss/ekslaunched.png)
+![EKS running](../stage3-ss/eksupnrunning.png)
+![Four repos created in ECR](../stage3-ss/4repocreatedinECR.png)
+![Destroy complete](../stage3-ss/destructioncomplete26resources.png)
+![S3 bucket destroyed](../stage3-ss/s3bucketdestroyed.png)
