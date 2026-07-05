@@ -143,12 +143,12 @@ docker compose ps
 
 ## Screenshots
 
-Reference screenshots for this stage are stored in [Stage1 - ss](../Stage1%20-%20ss/).
+Reference screenshots for this stage are stored in [screenshots/stage1 - ss](../screenshots/stage1%20-%20ss/).
 
-![Frontend running](../Stage1%20-%20ss/Frontend%20Running.png)
-![API called](../Stage1%20-%20ss/API%20called.png)
-![End to end flow](../Stage1%20-%20ss/End%20to%20End.png)
-![Order received and queued](../Stage1%20-%20ss/Order%20Recieved%20and%20Queued.png)
-![RabbitMQ queue](../Stage1%20-%20ss/RabbitMQ-Queue.png)
-![Order processing](../Stage1%20-%20ss/order%20processing.png)
-![Updated when consumer stopped](../Stage1%20-%20ss/Updated%20when%20consumer%20stopped.png)
+![Frontend running](../screenshots/stage1%20-%20ss/Frontend%20Running.png)
+![API called](../screenshots/stage1%20-%20ss/API%20called.png)
+![End to end flow](../screenshots/stage1%20-%20ss/End%20to%20End.png)
+![Order received and queued](../screenshots/stage1%20-%20ss/Order%20Recieved%20and%20Queued.png)
+![RabbitMQ queue](../screenshots/stage1%20-%20ss/RabbitMQ-Queue.png)
+![Order processing](../screenshots/stage1%20-%20ss/order%20processing.png)
+![Updated when consumer stopped](../screenshots/stage1%20-%20ss/Updated%20when%20consumer%20stopped.png)

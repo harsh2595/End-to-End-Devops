@@ -12,7 +12,7 @@ This folder contains the stage walkthroughs for the project.
 
 ## Screenshot Folders
 
-- [Stage 1 screenshots](../Stage1%20-%20ss/)
-- [Stage 2 screenshots](../stage2-ss/)
-- [Stage 3 screenshots](../stage3-ss/)
-- [Stage 4 screenshots](../stage4-ss/)
+- [Stage 1 screenshots](../screenshots/stage1%20-%20ss/)
+- [Stage 2 screenshots](../screenshots/stage2-ss/)
+- [Stage 3 screenshots](../screenshots/stage3-ss/)
+- [Stage 4 screenshots](../screenshots/stage4-ss/)

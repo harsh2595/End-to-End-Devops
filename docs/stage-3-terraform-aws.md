@@ -186,15 +186,15 @@ terraform destroy -var-file="terraform.tfvars"
 
 ## Screenshots
 
-The Stage 3 screenshots are stored in [stage3-ss](../stage3-ss/).
+The Stage 3 screenshots are stored in [screenshots/stage3-ss](../screenshots/stage3-ss/).
 
-![S3 backend state management](../stage3-ss/s3backend-state-management.png)
-![Backend S3 state file](../stage3-ss/Backend-s3-statefile.png)
-![Resources created](../stage3-ss/resources3created.png)
-![VPC subnet planned](../stage3-ss/eksvpcsubnet-planned.png)
-![Creation in progress](../stage3-ss/Creationinprogresseksvpcsubnet.png)
-![EKS launched](../stage3-ss/ekslaunched.png)
-![EKS running](../stage3-ss/eksupnrunning.png)
-![Four repos created in ECR](../stage3-ss/4repocreatedinECR.png)
-![Destroy complete](../stage3-ss/destructioncomplete26resources.png)
-![S3 bucket destroyed](../stage3-ss/s3bucketdestroyed.png)
+![S3 backend state management](../screenshots/stage3-ss/s3backend-state-management.png)
+![Backend S3 state file](../screenshots/stage3-ss/Backend-s3-statefile.png)
+![Resources created](../screenshots/stage3-ss/resources3created.png)
+![VPC subnet planned](../screenshots/stage3-ss/eksvpcsubnet-planned.png)
+![Creation in progress](../screenshots/stage3-ss/Creationinprogresseksvpcsubnet.png)
+![EKS launched](../screenshots/stage3-ss/ekslaunched.png)
+![EKS running](../screenshots/stage3-ss/eksupnrunning.png)
+![Four repos created in ECR](../screenshots/stage3-ss/4repocreatedinECR.png)
+![Destroy complete](../screenshots/stage3-ss/destructioncomplete26resources.png)
+![S3 bucket destroyed](../screenshots/stage3-ss/s3bucketdestroyed.png)
