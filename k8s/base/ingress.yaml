@@ -4,9 +4,9 @@ metadata:
   name: app-ingress
   namespace: end-to-end-devops
 spec:
+  ingressClassName: nginx
   rules:
-    - host: frontend.local
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -15,13 +15,3 @@ spec:
                 name: frontend
                 port:
                   number: 3000
-    - host: api.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: api-gateway
-                port:
-                  number: 5000
