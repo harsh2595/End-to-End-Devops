@@ -7,6 +7,7 @@ This repository walks through a full app delivery pipeline in four stages:
 3. AWS infrastructure with Terraform
 4. Kubernetes on EKS
 5. Helm packaging
+6. CI/CD pipelines
 
 The stage-by-stage command sequences live in:
 
@@ -15,6 +16,7 @@ The stage-by-stage command sequences live in:
 - [Stage 3](command-sequence/stage3-command-sequence.md)
 - [Stage 4](command-sequence/stage4-command-sequence.md)
 - [Stage 5](command-sequence/stage5-command-sequence.md)
+- [Stage 6](command-sequence/stage6-command-sequence.md)
 
 ## Project Layout
 
@@ -123,6 +125,26 @@ Follow the Stage 5 command sequence and structure docs:
 
 - [Stage 5 command sequence](command-sequence/stage5-command-sequence.md)
 - [Stage 5 file structure](file-structure/stage5-file-structure.md)
+
+### Stage 6: CI/CD Pipelines
+
+Stage 6 automates Terraform provisioning and application deployment with GitHub Actions.
+
+Included workflows:
+
+- `.github/workflows/terraform-provision.yml`
+- `.github/workflows/deploy.yml`
+
+Follow the Stage 6 docs:
+
+- [Stage 6 command sequence](command-sequence/stage6-command-sequence.md)
+- [Stage 6 file structure](file-structure/stage6-file-structure.md)
+- [Stage 6 GitHub settings steps](docs/stage6-github-steps.md)
+
+Workflow references:
+
+- [.github/workflows/terraform-provision.yml](.github/workflows/terraform-provision.yml)
+- [.github/workflows/deploy.yml](.github/workflows/deploy.yml)
 
 ## Quick Start
 

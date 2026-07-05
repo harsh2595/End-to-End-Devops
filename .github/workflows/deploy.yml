@@ -1,0 +1,92 @@
+name: Deploy to EKS
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag to deploy"
+        required: true
+        default: latest
+      jwt_secret:
+        description: "JWT secret for the Helm chart"
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: ap-south-1
+  EKS_CLUSTER_NAME: end-to-end-devops-dev-eks
+  ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
+  PROJECT_PREFIX: end-to-end-devops-dev
+  HELM_RELEASE: end-to-end-devops
+  HELM_NAMESPACE: end-to-end-devops
+  INGRESS_NAMESPACE: ingress-nginx
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: latest
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push Images
+        env:
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        run: |
+          docker build -f docker/frontend.Dockerfile -t "${ECR_REGISTRY}/${PROJECT_PREFIX}-frontend:${IMAGE_TAG}" .
+          docker build -f docker/api-gateway.Dockerfile -t "${ECR_REGISTRY}/${PROJECT_PREFIX}-api-gateway:${IMAGE_TAG}" .
+          docker build -f docker/auth-service.Dockerfile -t "${ECR_REGISTRY}/${PROJECT_PREFIX}-auth-service:${IMAGE_TAG}" .
+          docker build -f docker/orders-service.Dockerfile -t "${ECR_REGISTRY}/${PROJECT_PREFIX}-orders-service:${IMAGE_TAG}" .
+          docker push "${ECR_REGISTRY}/${PROJECT_PREFIX}-frontend:${IMAGE_TAG}"
+          docker push "${ECR_REGISTRY}/${PROJECT_PREFIX}-api-gateway:${IMAGE_TAG}"
+          docker push "${ECR_REGISTRY}/${PROJECT_PREFIX}-auth-service:${IMAGE_TAG}"
+          docker push "${ECR_REGISTRY}/${PROJECT_PREFIX}-orders-service:${IMAGE_TAG}"
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region "${AWS_REGION}" --name "${EKS_CLUSTER_NAME}"
+
+      - name: Install ingress-nginx
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          kubectl create namespace "${INGRESS_NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+          helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
+            --namespace "${INGRESS_NAMESPACE}" \
+            --set controller.service.type=LoadBalancer
+
+      - name: Deploy Helm chart
+        run: |
+          helm upgrade --install "${HELM_RELEASE}" ./helm/end-to-end-devops \
+            --namespace "${HELM_NAMESPACE}" \
+            --create-namespace \
+            --set image.registry="${ECR_REGISTRY}" \
+            --set image.tag="${{ github.event.inputs.image_tag }}" \
+            --set secrets.jwtSecret="${{ github.event.inputs.jwt_secret }}"
+
+      - name: Verify Deployment
+        run: |
+          helm list -n "${HELM_NAMESPACE}"
+          kubectl get all -n "${HELM_NAMESPACE}"
+          kubectl get svc -n "${INGRESS_NAMESPACE}"

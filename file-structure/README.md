@@ -7,3 +7,4 @@ If you add or restore stage file-structure markdown files later, place them here
 ## Files
 
 - `stage5-file-structure.md`
+- `stage6-file-structure.md`
