@@ -9,10 +9,10 @@ This repository walks through a full app delivery pipeline in four stages:
 
 The stage-by-stage command sequences live in:
 
-- [Stage 1](stage1-command-sequence.md)
-- [Stage 2](stage2-command-sequence.md)
-- [Stage 3](stage3-command-sequence.md)
-- [Stage 4](stage4-command-sequence.md)
+- [Stage 1](command-sequence/stage1-command-sequence.md)
+- [Stage 2](command-sequence/stage2-command-sequence.md)
+- [Stage 3](command-sequence/stage3-command-sequence.md)
+- [Stage 4](command-sequence/stage4-command-sequence.md)
 
 ## Project Layout
 
@@ -36,7 +36,7 @@ Main checks:
 
 Use the Stage 1 sequence for the exact start and stop commands:
 
-- [Stage 1 command sequence](stage1-command-sequence.md)
+- [Stage 1 command sequence](command-sequence/stage1-command-sequence.md)
 
 ### Stage 2: Docker Compose
 
@@ -84,7 +84,7 @@ Stage 3 provisions the cloud foundation:
 
 Follow the Stage 3 command sequence for the bootstrap and dev workflow:
 
-- [Stage 3 command sequence](stage3-command-sequence.md)
+- [Stage 3 command sequence](command-sequence/stage3-command-sequence.md)
 
 ### Stage 4: Kubernetes on EKS
 
@@ -106,7 +106,7 @@ Important prerequisites:
 
 Follow the Stage 4 command sequence for the exact apply and teardown flow:
 
-- [Stage 4 command sequence](stage4-command-sequence.md)
+- [Stage 4 command sequence](command-sequence/stage4-command-sequence.md)
 
 ## Quick Start
 

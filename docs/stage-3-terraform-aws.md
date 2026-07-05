@@ -17,7 +17,7 @@ Stage 3 provisions the AWS infrastructure used by the later Kubernetes deploymen
 - `terraform/modules/network/`
 - `terraform/modules/ecr/`
 - `terraform/modules/eks/`
-- `terraform-command-sequence.md`
+- `command-sequence/stage3-command-sequence.md`
 
 ## Infrastructure Created
 
