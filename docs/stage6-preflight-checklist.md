@@ -19,6 +19,8 @@ Use this checklist before running the GitHub Actions workflows for Stage 6.
 - backend configuration exists and is reachable
 - bootstrap resources already exist if the workflow expects them
 - dev environment state is healthy
+- if you are doing a full cleanup, `docs/stage6-final-destroy.sh` exists and can be run from the repo root
+- if you are doing a full cleanup, the script should finish with `S3 and DynamoDB destroyed successfully.`
 
 ## EKS and ECR
 

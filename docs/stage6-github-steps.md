@@ -65,6 +65,8 @@ Terraform provisioning workflow:
 - `action=apply`
 - `action=destroy`
 
+For teardown, open the `Terraform Provision` workflow in GitHub Actions and change the `action` input from `apply` to `destroy` before clicking `Run workflow`.
+
 Deployment workflow:
 
 - `image_tag`
@@ -72,7 +74,7 @@ Deployment workflow:
 
 Destroy workflow:
 
-When you run the workflow manually from the GitHub Actions tab, fill these inputs in the `Run workflow` form.
+When you run the workflow manually from the GitHub Actions tab, just click `Run workflow` because it does not take extra inputs now.
 
 ## 6. What Each Workflow Needs
 
@@ -132,6 +134,21 @@ It can:
 - delete the `end-to-end-devops` namespace
 - uninstall `ingress-nginx`
 - delete the `ingress-nginx` namespace
+
+## 10. Final Bootstrap Cleanup
+
+If the Terraform destroy workflow leaves the bootstrap S3 bucket and DynamoDB table behind, run [Stage 6 final destroy script](stage6-final-destroy.sh) from the repo root.
+
+That script removes:
+
+- `harsh-end-to-end-devops-tf-state`
+- `end-to-end-devops-tf-locks`
+
+It also verifies the deletion and prints:
+
+- `S3 bucket destroyed: ...`
+- `DynamoDB table destroyed: ...`
+- `S3 and DynamoDB destroyed successfully.`
 
 ## Notes
 

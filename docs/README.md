@@ -21,6 +21,7 @@ This folder contains the stage walkthroughs for the project.
 
 - [.github/workflows/terraform-provision.yml](../.github/workflows/terraform-provision.yml)
 - [.github/workflows/deploy.yml](../.github/workflows/deploy.yml)
+- [Stage 6 final destroy script](stage6-final-destroy.sh)
 - [Stage 6 command sequence](../command-sequence/stage6-command-sequence.md)
 - [Stage 6 file structure](../file-structure/stage6-file-structure.md)
 - [Stage 6 GitHub settings steps](stage6-github-steps.md)
@@ -34,3 +35,4 @@ This folder contains the stage walkthroughs for the project.
 - [Stage 3 screenshots](../screenshots/stage3-ss/)
 - [Stage 4 screenshots](../screenshots/stage4-ss/)
 - [Stage 5 screenshots](../screenshots/stage5-ss/)
+- [Stage 6 screenshots](../screenshots/stage6-ss/)

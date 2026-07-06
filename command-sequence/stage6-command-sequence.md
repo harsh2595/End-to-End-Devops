@@ -62,3 +62,11 @@ Use this when you want to clean up the Helm deployment without tearing down Terr
 - the Helm chart must render successfully
 - the ingress controller must have an AWS load balancer
 - Terraform is not responsible for the ingress controller or the load balancer
+
+## 6. Final Bootstrap Cleanup
+
+If the Terraform destroy workflow leaves the bootstrap S3 bucket and DynamoDB table behind, run `docs/stage6-final-destroy.sh` from the repo root.
+
+Expected success message:
+
+- `S3 and DynamoDB destroyed successfully.`
