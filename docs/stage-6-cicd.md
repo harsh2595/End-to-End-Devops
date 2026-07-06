@@ -12,6 +12,7 @@ Stage 6 automates the project with GitHub Actions.
 
 - `.github/workflows/terraform-provision.yml`
 - `.github/workflows/deploy.yml`
+- `.github/workflows/destroy.yml`
 
 ## Required Secrets
 
@@ -29,6 +30,8 @@ Deployment workflow:
 - `image_tag`
 - `jwt_secret`
 
+Destroy workflow:
+
 ## Notes
 
 - Terraform provisioning uses the existing `terraform/bootstrap` and `terraform/environments/dev` directories.
@@ -36,3 +39,5 @@ Deployment workflow:
 - The ingress controller is installed as a separate `ingress-nginx` Helm release.
 - The ingress controller service is set to `LoadBalancer`, so AWS creates the external load balancer for browser traffic.
 - Terraform does not create the ingress controller or load balancer; GitHub Actions + Helm do that during deployment.
+- The destroy workflow removes the Helm release and can optionally remove `ingress-nginx` too.
+- The destroy workflow removes the Helm release and also removes `ingress-nginx` and its namespace.

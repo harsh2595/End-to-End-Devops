@@ -25,6 +25,7 @@ This folder contains the stage walkthroughs for the project.
 - [Stage 6 file structure](../file-structure/stage6-file-structure.md)
 - [Stage 6 GitHub settings steps](stage6-github-steps.md)
 - [Stage 6 pre-flight checklist](stage6-preflight-checklist.md)
+- [Stage 6 GitHub IAM policies](stage6-github-policy/README.md)
 
 ## Screenshot Folders
 

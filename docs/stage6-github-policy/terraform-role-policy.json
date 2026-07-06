@@ -1,0 +1,50 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "TerraformStateBucketAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation",
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::YOUR-TF-STATE-BUCKET",
+        "arn:aws:s3:::YOUR-TF-STATE-BUCKET/*"
+      ]
+    },
+    {
+      "Sid": "TerraformLockTableAccess",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource": "arn:aws:dynamodb:ap-south-1:YOUR_ACCOUNT_ID:table/YOUR-TF-LOCK-TABLE"
+    },
+    {
+      "Sid": "TerraformInfrastructureAccess",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:*",
+        "eks:*",
+        "ecr:*",
+        "iam:*",
+        "autoscaling:*",
+        "elasticloadbalancing:*",
+        "logs:*",
+        "cloudwatch:*",
+        "route53:*",
+        "sqs:*",
+        "sns:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

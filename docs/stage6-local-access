@@ -1,0 +1,40 @@
+Option 1 (Recommended): Use an IAM User for local access
+
+Create an IAM user (e.g. harsh).
+Generate an Access Key.
+Configure your AWS CLI:
+aws configure
+Grant that IAM user access to your EKS cluster.
+
+If your cluster uses EKS Access Entries:
+
+aws eks create-access-entry \
+  --cluster-name end-to-end-devops-dev-eks \
+  --principal-arn arn:aws:iam::198452822403:user/harsh
+
+Then:
+
+aws eks associate-access-policy \
+  --cluster-name end-to-end-devops-dev-eks \
+  --principal-arn arn:aws:iam::198452822403:user/harsh \
+  --policy-arn arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy \
+  --access-scope type=cluster
+
+
+
+Option 2: Allow an IAM user to assume the GitHub role
+
+If you want to use the same end-to-end-devops role from your laptop, you'll need to:
+
+create an IAM user,
+give it permission to call sts:AssumeRole,
+modify the end-to-end-devops role's trust policy to trust both:
+GitHub OIDC, and
+your IAM user.
+
+Then you can run:
+
+aws sts assume-role \
+  --role-arn arn:aws:iam::198452822403:role/end-to-end-devops \
+  --role-session-name local-session
+

@@ -36,12 +36,26 @@ What it does:
 - deploys the `helm/end-to-end-devops` chart
 - verifies the release and services
 
-## 3. Required Secrets
+## 3. Helm Destroy Workflow
+
+Run the GitHub Actions workflow named `Destroy Helm Release`.
+
+What it does:
+
+- updates kubeconfig for the EKS cluster
+- uninstalls the `end-to-end-devops` Helm release
+- deletes the `end-to-end-devops` namespace
+- uninstalls `ingress-nginx`
+- deletes the `ingress-nginx` namespace
+
+Use this when you want to clean up the Helm deployment without tearing down Terraform infrastructure.
+
+## 4. Required Secrets
 
 - `AWS_ROLE_TO_ASSUME`
 - `AWS_ACCOUNT_ID`
 
-## 4. Environment Dependencies
+## 5. Environment Dependencies
 
 - Terraform stage outputs must exist before the deployment workflow runs
 - EKS must already be active

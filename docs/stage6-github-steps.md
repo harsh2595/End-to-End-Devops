@@ -70,6 +70,8 @@ Deployment workflow:
 - `image_tag`
 - `jwt_secret`
 
+Destroy workflow:
+
 When you run the workflow manually from the GitHub Actions tab, fill these inputs in the `Run workflow` form.
 
 ## 6. What Each Workflow Needs
@@ -86,6 +88,10 @@ When you run the workflow manually from the GitHub Actions tab, fill these input
 - `AWS_REGION`
 - `image_tag`
 - `jwt_secret`
+
+`destroy.yml`:
+
+- `AWS_ROLE_TO_ASSUME`
 
 ## 7. Validate Access
 
@@ -115,6 +121,17 @@ This means:
 - Terraform provisions the AWS infrastructure
 - GitHub Actions deploys the app
 - Helm installs the ingress controller and creates the load balancer path for browser traffic
+
+## 9. Destroying the Helm Release
+
+Use `.github/workflows/destroy.yml` when you want to remove the Helm deployment from the cluster.
+
+It can:
+
+- uninstall the `end-to-end-devops` Helm release
+- delete the `end-to-end-devops` namespace
+- uninstall `ingress-nginx`
+- delete the `ingress-nginx` namespace
 
 ## Notes
 
