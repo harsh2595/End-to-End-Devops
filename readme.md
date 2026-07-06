@@ -1,5 +1,7 @@
 # End-to-End DevOps Project
 
+![Architecture diagram](screenshots/arch_diagram_till_stage6.png)
+
 This repository walks through a full app delivery pipeline in four stages:
 
 1. local development with Node.js
